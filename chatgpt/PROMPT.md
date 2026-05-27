@@ -268,6 +268,39 @@ Fallback for unmapped services:
 sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#232F3E;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.general_AWScloud
 ```
 
+## Layers for Multi-Layer Architectures
+
+For complex or multi-tier diagrams, use draw.io layers to organize elements and reduce visual clutter. Layers allow toggling visibility of different architectural concerns (e.g., networking, security, monitoring) within a single page.
+
+When to use layers:
+- Diagrams with overlapping concerns (e.g., data flow + security controls on the same view)
+- Multi-tier architectures where showing everything at once is overwhelming
+- Presentations that reveal architecture incrementally
+
+How to structure layers:
+- Background layer (bottom): canvas background, title block, legend
+- Infrastructure layer: VPCs, subnets, availability zones, networking
+- Application layer: compute, containers, serverless functions
+- Data layer: databases, caches, storage
+- Security layer (optional): WAF, Shield, security groups, IAM boundaries
+- Monitoring layer (optional): CloudWatch, CloudTrail, alarms
+
+draw.io XML for layers — each layer is an mxCell with parent="0". Child elements reference the layer ID instead of "1":
+```xml
+<mxCell id="0" />
+<mxCell id="infra-layer" value="Infrastructure" parent="0" />
+<mxCell id="app-layer" value="Application" parent="0" visible="1" />
+<mxCell id="security-layer" value="Security" parent="0" visible="0" />
+<mxCell id="vpc1" value="VPC" style="..." vertex="1" parent="infra-layer">
+  <mxGeometry ... />
+</mxCell>
+<mxCell id="lambda1" value="Lambda" style="..." vertex="1" parent="app-layer">
+  <mxGeometry ... />
+</mxCell>
+```
+- Set visible="0" on layers that should be hidden by default
+- Users can toggle layers via View > Layers in draw.io Desktop
+
 ## Audience Mode
 
 - Technical: Use service names, protocol labels (HTTPS, gRPC), CIDR blocks
