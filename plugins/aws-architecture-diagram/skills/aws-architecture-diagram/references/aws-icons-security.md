@@ -1,5 +1,7 @@
 # AWS Icons: Security, Identity & Compliance
 
+> Updated: 2026-05-28 — Aligned with AWS Architecture Icons (April 2026, Icon-package_04302026)
+
 fillColor: `#DD344C` | strokeColor: `#ffffff`
 
 ## Service-level (resourceIcon frame, 78x78)
@@ -10,8 +12,7 @@ fillColor: `#DD344C` | strokeColor: `#ffffff`
 | `guardduty` | GuardDuty |
 | `inspector` | Inspector |
 | `macie` | Macie |
-| `iam_identity_center` | IAM Identity Center |
-| `single_sign_on` | IAM Identity Center (SSO) |
+| `single_sign_on` | IAM Identity Center |
 | `certificate_manager_3` | Certificate Manager |
 | `cloud_hsm` | CloudHSM |
 | `directory_service` | Directory Service |

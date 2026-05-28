@@ -1,5 +1,7 @@
 # AWS Icons: Networking & Content Delivery
 
+> Updated: 2026-05-28 — Aligned with AWS Architecture Icons (April 2026, Icon-package_04302026)
+
 fillColor: `#8C4FFF` | strokeColor: `#ffffff`
 
 ## Service-level (resourceIcon frame, 78x78)
