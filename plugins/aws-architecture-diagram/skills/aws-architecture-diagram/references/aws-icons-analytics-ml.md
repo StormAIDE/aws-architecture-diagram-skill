@@ -1,5 +1,7 @@
 # AWS Icons: Analytics & AI/ML
 
+> Updated: 2026-05-28 — Aligned with AWS Architecture Icons (April 2026, Icon-package_04302026)
+
 ## Analytics
 fillColor: `#8C4FFF` | strokeColor: `#ffffff`
 
@@ -14,18 +16,19 @@ fillColor: `#8C4FFF` | strokeColor: `#ffffff`
 | `kinesis_data_firehose` | Data Firehose |
 | `kinesis_data_streams` | Kinesis Data Streams |
 | `kinesis_video_streams` | Kinesis Video Streams |
-| `quicksight` | QuickSight |
 | `redshift` | Redshift |
 | `glue` | Glue |
 | `data_pipeline` | Data Pipeline |
 | `lake_formation` | Lake Formation |
-| `msk` | MSK |
+| `managed_streaming_for_kafka` | MSK |
 | `elasticsearch_service` | OpenSearch Service |
 | `datazone` | DataZone |
 | `clean_rooms` | Clean Rooms |
 | `finspace` | FinSpace |
 | `managed_service_for_apache_flink` | Managed Apache Flink |
 | `entity_resolution` | Entity Resolution |
+
+> **Removed (April 2026):** `quicksight` — service deprecated
 
 ## AI / Machine Learning
 fillColor: `#01A88D` | strokeColor: `#ffffff`
@@ -53,6 +56,10 @@ fillColor: `#01A88D` | strokeColor: `#ffffff`
 | `codewhisperer` | CodeWhisperer |
 | `augmented_ai` | Augmented AI |
 | `q` | Amazon Q |
+| `amazonq_business` | Amazon Q Business |
+| `amazonq_developer` | Amazon Q Developer |
+
+> **Removed (April 2026):** `deepcomposer`, `lookout_for_metrics` — services deprecated
 
 ### Resource-level (standalone shape, 78x78)
 fillColor: `#01A88D` | strokeColor: `none`
@@ -65,3 +72,5 @@ fillColor: `#01A88D` | strokeColor: `none`
 | `sagemaker_canvas` | SageMaker Canvas |
 | `rekognition_image` | Rekognition Image |
 | `rekognition_video` | Rekognition Video |
+| `bedrock_agent` | Bedrock Agent |
+| `bedrock_knowledge_base` | Bedrock Knowledge Base |

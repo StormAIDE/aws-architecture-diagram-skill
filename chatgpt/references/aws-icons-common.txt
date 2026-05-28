@@ -1,5 +1,7 @@
 # AWS Icons: General, Groups & Arrows
 
+> Updated: 2026-05-28 — Aligned with AWS Architecture Icons (April 2026, Icon-package_04302026)
+
 ## General Resources (standalone shapes)
 fillColor: `#232F3D` | strokeColor: `none`
 
@@ -31,26 +33,37 @@ fillColor: `#232F3D` | strokeColor: `none`
 | `thumbs_down` | Thumbs Down |
 
 ## Group Containers
-All groups: `fillColor=none` | Use with `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.<grIcon>`
 
-| grIcon | strokeColor | fontColor | Display Name |
-|--------|-------------|-----------|-------------|
-| `group_aws_cloud_alt` | `#232F3E` | `#232F3E` | AWS Cloud |
-| `group_aws_cloud` | `#232F3E` | `#232F3E` | AWS Cloud (alt) |
-| `group_region` | `#00A4A6` | `#147EBA` | Region |
-| `group_availability_zone` | `#007FAA` | `#007FAA` | Availability Zone |
-| `group_security_group` | `#DD344C` | `#DD344C` | Security Group |
-| `group_vpc` | `#8C4FFF` | `#8C4FFF` | VPC |
-| `group_private_subnet` | `#147EBA` | `#147EBA` | Private Subnet |
-| `group_public_subnet` | `#248814` | `#248814` | Public Subnet |
-| `group_account` | `#CD2264` | `#CD2264` | AWS Account |
-| `group_corporate_data_center` | `#7D8998` | `#5A6C86` | Corporate DC |
-| `group_on_premise` | `#5A6C86` | `#5A6C86` | On-Premise |
-| `group_elastic_beanstalk` | `#D86613` | `#D86613` | Elastic Beanstalk |
-| `group_ec2_instance_contents` | `#D86613` | `#D86613` | EC2 Instance |
-| `group_spot_fleet` | `#D86613` | `#D86613` | Spot Fleet |
-| `group_aws_step_functions_workflow` | `#CD2264` | `#CD2264` | Step Functions |
-| `group_iot_greengrass` | `#7AA116` | `#3F8624` | IoT Greengrass |
+### Reference-Architecture Style (recommended — matches AWS official diagrams)
+Use with `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.<grIcon>;container=1;dropTarget=1;`
+
+| grIcon | strokeColor | fillColor | fontColor | Display Name |
+|--------|-------------|-----------|-----------|-------------|
+| `group_aws_cloud_alt` | `#232F3E` | `#F2F3F4` | `#232F3E` | AWS Cloud |
+| `group_aws_cloud` | `#232F3E` | `#F2F3F4` | `#232F3E` | AWS Cloud (alt) |
+| `group_region` | `#00A4A6` | `#E6F6F7` | `#147EBA` | Region |
+| `group_availability_zone` | `#007FAA` | `#FFFFFF` | `#007FAA` | Availability Zone |
+| `group_security_group` | `#DD344C` | `none` | `#DD344C` | Security Group |
+| `group_vpc` | `#8C4FFF` | `#F5F0FF` | `#8C4FFF` | VPC |
+| `group_vpc2` | `#8C4FFF` | `#F5F0FF` | `#8C4FFF` | VPC (alt) |
+| `group_private_subnet` | `#147EBA` | `#E6F0F7` | `#147EBA` | Private Subnet |
+| `group_public_subnet` | `#248814` | `#E9F3E6` | `#248814` | Public Subnet |
+| `group_account` | `#CD2264` | `#FDF1F6` | `#CD2264` | AWS Account |
+| `group_corporate_data_center` | `#7D8998` | `#F2F3F4` | `#5A6C86` | Corporate DC |
+| `group_on_premise` | `#5A6C86` | `#F2F3F4` | `#5A6C86` | On-Premise |
+| `group_elastic_beanstalk` | `#D86613` | `none` | `#D86613` | Elastic Beanstalk |
+| `group_ec2_instance_contents` | `#D86613` | `none` | `#D86613` | EC2 Instance |
+| `group_spot_fleet` | `#D86613` | `none` | `#D86613` | Spot Fleet |
+| `group_aws_step_functions_workflow` | `#CD2264` | `none` | `#CD2264` | Step Functions |
+| `group_iot_greengrass` | `#7AA116` | `none` | `#3F8624` | IoT Greengrass |
+
+### Minimal Style (legacy — transparent backgrounds)
+Same as above but replace fillColor with `none` for all groups:
+```
+fillColor=none;
+```
+
+> **Choosing a style:** Use **Reference-Architecture Style** for presentation-quality diagrams (executive, documentation, AWS review). Use **Minimal Style** for quick technical sketches or when visual simplicity is preferred.
 
 ## Generic Groups (no grIcon)
 ```
@@ -76,12 +89,36 @@ edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;elbow=vertical;startArrow=no
 
 **Confusing these two patterns guarantees broken icons.**
 
+## Step Annotation Panel
+
+Every diagram should include a **numbered step annotation panel** to explain the architecture flow. Place this as a text block on the right side or bottom of the diagram.
+
+### Step badge style (circled number on edge):
+```
+shape=ellipse;fillColor=#232F3E;fontColor=#FFFFFF;strokeColor=none;fontSize=12;fontStyle=1;aspect=fixed;
+```
+Size: 24x24, placed near the edge midpoint.
+
+### Step description panel style:
+```xml
+<mxCell value="&lt;b&gt;Architecture Flow&lt;/b&gt;&lt;br&gt;① User request arrives via Route 53&lt;br&gt;② CloudFront serves cached content or forwards to origin&lt;br&gt;③ API Gateway authenticates and routes the request&lt;br&gt;④ Lambda processes business logic&lt;br&gt;⑤ DynamoDB stores/retrieves data" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fillColor=#F2F3F4;strokeColor=#E0E0E0;fontSize=12;spacing=10;arcSize=5;" vertex="1" parent="1">
+  <mxGeometry x="1800" y="100" width="350" height="200" as="geometry" />
+</mxCell>
+```
+
 ## PNG Export Background Fix
 Place a light gray rectangle covering the entire diagram as background layer:
 ```
 rounded=1;whiteSpace=wrap;fillColor=#F5F5F5;strokeColor=#E0E0E0;arcSize=2;
 ```
 This prevents black background on areas outside groups when exporting to PNG.
+
+## Title Block (Reference-Architecture Style)
+```xml
+<mxCell value="&lt;b style='font-size:16px'&gt;Diagram Title&lt;/b&gt;&lt;br&gt;&lt;span style='color:#545B64'&gt;Author | Date | Version | Environment&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=10;" vertex="1" parent="1">
+  <mxGeometry x="40" y="30" width="500" height="60" as="geometry" />
+</mxCell>
+```
 
 ## Base Template
 ```xml
