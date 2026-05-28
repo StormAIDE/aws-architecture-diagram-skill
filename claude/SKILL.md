@@ -16,17 +16,36 @@ Generate AWS architecture diagrams as native `.drawio` files using official AWS 
 
 ## Layout Rules
 
-- **Left-to-right flow** for data/request path
+- **Left-to-right flow** for data/request path (top-to-bottom is acceptable for vertical architectures)
+- Be **consistent** — don't mix flow directions within the same diagram
 - **UI/Frontend on the LEFT** (users access from left side)
 - **Data sources / external systems on the RIGHT**
 - Use horizontal lanes for parallel paths (top lane, bottom lane)
 - **Minimum 220px horizontal spacing** between icons (room for edge labels)
 - **Minimum 250px vertical spacing** between lanes
 - Secondary/auxiliary services (monitoring, DLQ) go BELOW main flow with 280px+ gap
+- **Separate control plane from data plane** when relevant
+- **Separate management/monitoring** components (CloudWatch, CloudTrail, Config) into a distinct section or sidebar
 - Canvas: `pageWidth="2400" pageHeight="1400"`, viewport `dx="2800" dy="1600"`
-- Always include a title block after the background rectangle:
+
+### Logical Tiers
+Organize resources into logical tiers when applicable:
+`[Users/Clients] → [Edge/CDN Layer] → [Load Balancing] → [Application Tier] → [Data Tier]`
+
+For example:
+- **Edge Layer:** CloudFront, Route 53, WAF
+- **Ingress Layer:** ALB/NLB, API Gateway
+- **Compute Layer:** EC2, ECS, Lambda, EKS
+- **Data Layer:** RDS, DynamoDB, ElastiCache, S3
+- **Integration Layer:** SQS, SNS, EventBridge, Step Functions
+
+### Title Block
+Always include a title block after the background rectangle. Every diagram should include:
+- **Title** — Descriptive name (e.g., "E-Commerce Platform – Production Architecture")
+- **Version/Date** — When the diagram was last updated
+- **Environment** — Production, Staging, Development (when applicable)
 ```xml
-<mxCell value="&lt;b&gt;Diagram Title&lt;/b&gt;&lt;br&gt;Author | Date | Version" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=8;" vertex="1" parent="1">
+<mxCell value="&lt;b&gt;Diagram Title&lt;/b&gt;&lt;br&gt;Author | Date | Version | Environment" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=8;" vertex="1" parent="1">
   <mxGeometry x="40" y="30" width="420" height="60" as="geometry" />
 </mxCell>
 ```
@@ -39,6 +58,31 @@ Generate AWS architecture diagrams as native `.drawio` files using official AWS 
 - Use `strokeColor=#ffffff` on all AWS service icons
 - Font size: **12px** for labels
 - **NO colored backgrounds** on group boxes — always `fillColor=none`
+
+## Labeling & Annotations
+
+- Use the **official AWS service name** (e.g., "Amazon EC2", "Amazon S3", "AWS Lambda")
+- Include the **resource type** where relevant (e.g., "t3.large", "db.r5.xlarge")
+- Add **instance counts or scaling information** (e.g., "2× EC2", "Auto Scaling 2–10")
+- Use **numbered callouts** to explain the flow sequence (①→②→③→④)
+- Add brief text annotations for non-obvious design decisions
+- Include a **legend/key** if you use custom colors, line styles, or symbols
+
+## Diagram Types
+
+Before generating, consider which diagram type best fits the request:
+
+| Diagram Type | Purpose | Key Elements |
+|---|---|---|
+| High-Level Overview | Executive/stakeholder communication | Major services, data flows, no internal details |
+| Detailed Architecture | Implementation blueprint for engineers | Subnets, security groups, instance types, ports |
+| Network Diagram | Networking team reference | VPCs, subnets, route tables, peering, TGW, Direct Connect |
+| Security Diagram | Security review & compliance | IAM, KMS, WAF, Shield, GuardDuty, security group rules |
+| Data Flow Diagram | Data processing & pipeline documentation | Data sources, transformations, storage, analytics |
+| Disaster Recovery | DR planning | Multi-Region, failover paths, RPO/RTO annotations |
+| Deployment Diagram | CI/CD & DevOps documentation | CodePipeline, CodeBuild, CodeDeploy, ECR |
+
+Create diagrams at different levels of abstraction for different audiences — executives need a high-level view, while engineers need detailed subnet-level diagrams.
 
 ## Edge Style — CRITICAL FOR CLEAN DIAGRAMS
 
@@ -62,6 +106,22 @@ edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;s
 - Solid (`strokeWidth=2`): primary data flow
 - Dashed (`strokeWidth=2;dashed=1;`): optional/async
 - Red dashed (`strokeWidth=2;dashed=1;strokeColor=#DD344C;`): error path
+
+**Color coding for traffic types (use consistently within a diagram):**
+- Blue (`strokeColor=#2196F3`): user/client traffic
+- Orange (`strokeColor=#FF9800`): management/admin traffic
+- Red (`strokeColor=#DD344C`): security events or error paths
+- Default black: general data flow
+
+**Bidirectional arrows:**
+- Use sparingly; prefer two separate arrows for clarity when different protocols are involved
+
+**Connection best practices:**
+- **Avoid crossing lines** wherever possible — rearrange components to minimize crossings
+- Use elbowed/orthogonal connectors (already the default style) instead of diagonal lines
+- Show VPC Endpoints and PrivateLink connections when private connectivity to AWS services is used
+- Show Internet Gateway, NAT Gateway, and Transit Gateway when they are part of the traffic path
+- **Label connections with protocols and ports** where helpful (e.g., "HTTPS/443", "SQL/3306", "gRPC")
 
 **Edge attachment (CRITICAL — fixes "green cross" problem):**
 - Every edge MUST have both `source="<cell-id>"` and `target="<cell-id>"` attributes referencing valid cell IDs
@@ -234,13 +294,50 @@ For complex architectures, use multiple pages in one .drawio file:
 - Page 1: High-level overview (service-level icons only)
 - Page 2+: Detail views (resource-level icons, subnet layouts, etc.)
 
+### Layers for Multi-Layer Architectures
+For complex or multi-tier diagrams, use **draw.io layers** to organize elements and reduce visual clutter. Layers allow toggling visibility of different architectural concerns (e.g., networking, security, monitoring) within a single page.
+
+**When to use layers:**
+- Diagrams with overlapping concerns (e.g., data flow + security controls on the same view)
+- Multi-tier architectures where showing everything at once is overwhelming
+- Presentations that reveal architecture incrementally
+
+**How to structure layers:**
+- **Background layer** (bottom): canvas background, title block, legend
+- **Infrastructure layer**: VPCs, subnets, availability zones, networking
+- **Application layer**: compute, containers, serverless functions
+- **Data layer**: databases, caches, storage
+- **Security layer** (optional): WAF, Shield, security groups, IAM boundaries
+- **Monitoring layer** (optional): CloudWatch, CloudTrail, alarms
+
+**draw.io XML for layers:**
+Each layer is an `mxCell` with `parent="0"`. Child elements reference the layer ID instead of `"1"`:
+```xml
+<mxCell id="0" />
+<mxCell id="infra-layer" value="Infrastructure" parent="0" />
+<mxCell id="app-layer" value="Application" parent="0" visible="1" />
+<mxCell id="security-layer" value="Security" parent="0" visible="0" />
+<!-- Elements on the infrastructure layer -->
+<mxCell id="vpc1" value="VPC" style="..." vertex="1" parent="infra-layer">
+  <mxGeometry ... />
+</mxCell>
+<!-- Elements on the application layer -->
+<mxCell id="lambda1" value="Lambda" style="..." vertex="1" parent="app-layer">
+  <mxGeometry ... />
+</mxCell>
+```
+- Set `visible="0"` on layers that should be hidden by default
+- Users can toggle layers via **View → Layers** in draw.io Desktop
+- Reference: https://www.drawio.com/doc/layers
+
 ### Legend / Title Block
 Place in top-left corner, inside the background rectangle:
 ```xml
-<mxCell value="&lt;b&gt;Diagram Title&lt;/b&gt;&lt;br&gt;Author | Date | Version" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=8;" vertex="1" parent="1">
-  <mxGeometry x="40" y="40" width="300" height="50" as="geometry" />
+<mxCell value="&lt;b&gt;Diagram Title&lt;/b&gt;&lt;br&gt;Author | Date | Version | Environment" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=8;" vertex="1" parent="1">
+  <mxGeometry x="40" y="40" width="420" height="50" as="geometry" />
 </mxCell>
 ```
+Include a legend/key below the title if the diagram uses custom colors, line styles, or symbols (e.g., solid = primary flow, dashed = async, red = error).
 
 ### PNG Export Background Fix
 Place a `#F5F5F5` rectangle covering the entire diagram as the bottom-most element to prevent black background on export.
