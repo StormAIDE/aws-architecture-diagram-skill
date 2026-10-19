@@ -6,14 +6,17 @@
 
 A reusable skill for generating AWS architecture diagrams in draw.io format. Works with **any AI assistant** — ChatGPT, Claude Projects, Kiro CLI, Claude Code, or any internal AI agent that supports custom prompts and file uploads.
 
-Generates production-quality `.drawio` files using official AWS Architecture Icons with proper styling, layout, and color coding.
+Generates production-quality `.drawio` files using official AWS Architecture Icons (April 2026) with **Reference-Architecture styling** — colored boundary fills, step annotation panels, and numbered flow edges matching [AWS official reference architectures](https://aws.amazon.com/architecture/).
 
 ## Features
 
+- **Reference-Architecture Style** — configurable colored boundary fills matching AWS official diagrams
+- **Step annotation panels** — numbered flow explanations (①②③…) on every diagram
 - **Left-to-right flow** — UI/Frontend on left, data sources on right
-- **Official AWS icons** — from draw.io's built-in `mxgraph.aws4` stencil library (sourced from [AWS Architecture Icons](https://aws.amazon.com/architecture/icons/))
+- **Official AWS icons** — from draw.io's built-in `mxgraph.aws4` stencil library (April 2026 icon package)
 - **Verified icon catalog** — only icons confirmed to render correctly
 - **Consistent styling** — 78px icons, strokeWidth=2 edges, proper AWS color palette
+- **7 reference templates** — serverless API, event-driven, static website, 3-tier web app, VPC networking, data mesh, hybrid networking
 - **Export support** — PNG/SVG/PDF via draw.io Desktop CLI with embedded XML
 
 ## Installation
@@ -110,6 +113,7 @@ Create an AWS architecture diagram as PNG for a real-time data pipeline with Kin
 aws-architecture-diagram-skill/
 ├── README.md
 ├── LICENSE
+├── CHANGELOG.md
 ├── chatgpt/
 │   ├── PROMPT.md                       # Universal prompt (ChatGPT, Claude Projects, any AI)
 │   └── references/                     # Same icons in .txt format for upload
@@ -121,20 +125,34 @@ aws-architecture-diagram-skill/
 │       ├── aws-icons-storage.txt
 │       ├── aws-icons-security.txt
 │       ├── aws-icons-analytics-ml.txt
-│       └── aws-icons-iot-migration-devtools.txt
+│       ├── aws-icons-iot-migration-devtools.txt
+│       ├── aws-icons-customer-experience.txt
+│       ├── aws-icons-multicloud-hybrid.txt
+│       └── style-guide.txt
 ├── kiro/
 │   └── SKILL.md                        # Kiro CLI version
 ├── claude/
 │   └── SKILL.md                        # Claude Code version
-└── references/
-    ├── aws-icons-compute.md            # Lambda, EC2, ECS, EKS, Fargate (25+ icons)
-    ├── aws-icons-database.md           # DynamoDB, RDS, Aurora, ElastiCache (40+ icons)
-    ├── aws-icons-integration.md        # API GW, SQS, SNS, EventBridge, Step Functions (35+ icons)
-    ├── aws-icons-networking.md         # CloudFront, Route 53, VPC, ELB (40+ icons)
-    ├── aws-icons-storage.md            # S3, EFS, EBS, Glacier, Backup (40+ icons)
-    ├── aws-icons-security.md           # IAM, Cognito, KMS, WAF, Shield (45+ icons)
-    ├── aws-icons-analytics-ml.md       # Kinesis, Athena, Bedrock, SageMaker (45+ icons)
-    └── aws-icons-common.md             # Groups, general resources, edge styles, base template
+├── references/
+│   ├── aws-icons-compute.md            # Lambda, EC2, ECS, EKS, Fargate (25+ icons)
+│   ├── aws-icons-database.md           # DynamoDB, RDS, Aurora, ElastiCache (40+ icons)
+│   ├── aws-icons-integration.md        # API GW, SQS, SNS, EventBridge, Step Functions (35+ icons)
+│   ├── aws-icons-networking.md         # CloudFront, Route 53, VPC, ELB (40+ icons)
+│   ├── aws-icons-storage.md            # S3, EFS, EBS, Glacier, Backup (40+ icons)
+│   ├── aws-icons-security.md           # IAM, Cognito, KMS, WAF, Shield (45+ icons)
+│   ├── aws-icons-analytics-ml.md       # Kinesis, Athena, Bedrock, SageMaker (45+ icons)
+│   ├── aws-icons-customer-experience.md # Connect, Pinpoint, SES
+│   ├── aws-icons-multicloud-hybrid.md  # Outposts, Local Zones, EKS Anywhere
+│   ├── aws-icons-common.md             # Groups, general resources, edge styles, base template
+│   └── style-guide.md                  # Visual design system, color palette, typography
+└── templates/
+    ├── serverless-rest-api.drawio
+    ├── event-driven-processing.drawio
+    ├── static-website.drawio
+    ├── three-tier-web-app.drawio
+    ├── vpc-networking.drawio
+    ├── data-mesh.drawio                # NEW: Multi-account DataZone pattern
+    └── hybrid-networking.drawio        # NEW: Transit Gateway hub-and-spoke
 ```
 
 ## Key Insight: Two Icon Patterns

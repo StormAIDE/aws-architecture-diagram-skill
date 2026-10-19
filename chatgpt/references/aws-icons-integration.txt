@@ -1,5 +1,7 @@
 # AWS Icons: Application Integration & Management
 
+> Updated: 2026-05-28 — Aligned with AWS Architecture Icons (April 2026, Icon-package_04302026)
+
 fillColor: `#E7157B` | strokeColor: `#ffffff`
 
 ## Service-level (resourceIcon frame, 78x78)

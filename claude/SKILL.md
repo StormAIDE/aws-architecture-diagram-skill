@@ -45,19 +45,31 @@ Always include a title block after the background rectangle. Every diagram shoul
 - **Version/Date** — When the diagram was last updated
 - **Environment** — Production, Staging, Development (when applicable)
 ```xml
-<mxCell value="&lt;b&gt;Diagram Title&lt;/b&gt;&lt;br&gt;Author | Date | Version | Environment" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=8;" vertex="1" parent="1">
-  <mxGeometry x="40" y="30" width="420" height="60" as="geometry" />
+<mxCell value="&lt;b style='font-size:16px'&gt;Diagram Title&lt;/b&gt;&lt;br&gt;&lt;span style='color:#545B64'&gt;Author | Date | Version | Environment&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=10;" vertex="1" parent="1">
+  <mxGeometry x="40" y="30" width="500" height="60" as="geometry" />
 </mxCell>
 ```
 
 ## Icon Style
 
-- Icons are from draw.io's built-in `mxgraph.aws4` stencil library — the **official AWS Architecture Icons** (https://aws.amazon.com/architecture/icons/)
+- Icons are from draw.io's built-in `mxgraph.aws4` stencil library — the **official AWS Architecture Icons** (https://aws.amazon.com/architecture/icons/) aligned with the April 2026 icon package
 - Icon size: **78x78px** for main services, **65x65px** for secondary
 - Use `sketch=0` on all icons
 - Use `strokeColor=#ffffff` on all AWS service icons
 - Font size: **12px** for labels
-- **NO colored backgrounds** on group boxes — always `fillColor=none`
+
+### Diagram Style Modes
+
+This skill supports two visual modes for group boundaries:
+
+**Reference-Architecture Style (default)** — matches official AWS Reference Architecture PDFs:
+- Use subtle colored fills for boundaries (see Group Boundaries section for exact fillColors)
+- Creates visual depth and clear hierarchy between layers
+- Best for: presentations, documentation, executive communication, AWS reviews
+
+**Minimal Style** — transparent backgrounds for all group boundaries:
+- All group boxes use `fillColor=none`
+- Best for: quick technical sketches, whiteboard-style diagrams
 
 ## Labeling & Annotations
 
@@ -67,6 +79,26 @@ Always include a title block after the background rectangle. Every diagram shoul
 - Use **numbered callouts** to explain the flow sequence (①→②→③→④)
 - Add brief text annotations for non-obvious design decisions
 - Include a **legend/key** if you use custom colors, line styles, or symbols
+
+## Step Annotation Panel (REQUIRED)
+
+Every diagram MUST include a **numbered step annotation panel** that explains the architecture flow. This matches AWS Reference Architecture PDF standards.
+
+### Panel placement:
+- **Right side** of the diagram when horizontal space allows (x=1800+, width=350)
+- **Bottom** of the diagram when the diagram is wide
+
+### Panel structure:
+```xml
+<mxCell value="&lt;b style='font-size:13px'&gt;Architecture Flow&lt;/b&gt;&lt;br&gt;&lt;br&gt;① User request arrives via Route 53&lt;br&gt;&lt;br&gt;② CloudFront serves cached content or forwards to origin&lt;br&gt;&lt;br&gt;③ API Gateway authenticates and routes the request&lt;br&gt;&lt;br&gt;④ Lambda processes business logic&lt;br&gt;&lt;br&gt;⑤ DynamoDB stores/retrieves data" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fillColor=#F2F3F4;strokeColor=#E0E0E0;fontSize=12;spacing=10;arcSize=5;" vertex="1" parent="1">
+  <mxGeometry x="1800" y="100" width="350" height="280" as="geometry" />
+</mxCell>
+```
+
+### Matching edges:
+Each numbered step corresponds to a flow edge in the diagram. Label edges with circled numbers:
+- Use `value="①"` with `fontSize=14;fontStyle=1;labelBackgroundColor=#ffffff;`
+- Steps should follow the data/request flow from left to right
 
 ## Diagram Types
 
@@ -155,6 +187,11 @@ First element after root cells (lowest z-order):
 | Route 53 | `mxgraph.aws4.route_53` | `#8C4FFF` |
 | ECS | `mxgraph.aws4.ecs` | `#ED7100` |
 | EC2 | `mxgraph.aws4.ec2` | `#ED7100` |
+| Bedrock | `mxgraph.aws4.bedrock` | `#01A88D` |
+| Amazon Q | `mxgraph.aws4.q` | `#01A88D` |
+| SageMaker | `mxgraph.aws4.sagemaker` | `#01A88D` |
+| DataZone | `mxgraph.aws4.datazone` | `#8C4FFF` |
+| Connect | `mxgraph.aws4.connect` | `#E7157B` |
 
 Style template:
 ```
@@ -185,15 +222,21 @@ sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffff
 
 ### Group boundaries
 
-| Group | grIcon | strokeColor |
-|-------|--------|-------------|
-| AWS Cloud | `mxgraph.aws4.group_aws_cloud_alt` | `#232F3E` |
-| Account | `mxgraph.aws4.group_account` | `#CD2264` |
-| On-premise | `mxgraph.aws4.group_on_premise` | `#5A6C86` |
-| Corporate DC | `mxgraph.aws4.group_corporate_data_center` | `#388E3C` |
-| VPC | `mxgraph.aws4.group_vpc2` | `#8C4FFF` |
-| Subnet (public) | `mxgraph.aws4.group_security_group` | `#7AA116` |
-| Subnet (private) | `mxgraph.aws4.group_security_group` | `#147EBA` |
+| Group | grIcon | strokeColor | fillColor (Ref-Arch) |
+|-------|--------|-------------|---------------------|
+| AWS Cloud | `mxgraph.aws4.group_aws_cloud_alt` | `#232F3E` | `#F2F3F4` |
+| Region | `mxgraph.aws4.group_region` | `#00A4A6` | `#E6F6F7` |
+| Account | `mxgraph.aws4.group_account` | `#CD2264` | `#FDF1F6` |
+| On-premise | `mxgraph.aws4.group_on_premise` | `#5A6C86` | `#F2F3F4` |
+| Corporate DC | `mxgraph.aws4.group_corporate_data_center` | `#7D8998` | `#F2F3F4` |
+| VPC | `mxgraph.aws4.group_vpc2` | `#8C4FFF` | `#F5F0FF` |
+| Availability Zone | `mxgraph.aws4.group_availability_zone` | `#007FAA` | `#FFFFFF` |
+| Subnet (public) | `mxgraph.aws4.group_public_subnet` | `#248814` | `#E9F3E6` |
+| Subnet (private) | `mxgraph.aws4.group_private_subnet` | `#147EBA` | `#E6F0F7` |
+| Security Group | `mxgraph.aws4.group_security_group` | `#DD344C` | `none` |
+
+> For **Minimal Style**, set `fillColor=none` for all groups.
+> For **Reference-Architecture Style** (default), use the fillColor values in the table above.
 
 **Container nesting (CRITICAL for grouping):**
 - ALL group/boundary shapes MUST include `container=1;dropTarget=1;` in their style
@@ -214,6 +257,20 @@ sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffff
 - DynamoDB tables/streams → use `resIcon=mxgraph.aws4.dynamodb` with descriptive labels
 - External systems → use `shape=mxgraph.aws4.traditional_server`
 - Browsers/clients → use `shape=mxgraph.aws4.client`
+
+## DEPRECATED Icons (April 2026) — Avoid in New Diagrams
+
+These icons are still in draw.io but the underlying AWS services have been deprecated or removed:
+- `quicksight` — QuickSight removed from icon set
+- `eks_cloud` — EKS Cloud removed
+- `iot_analytics` — IoT Analytics deprecated (incl. Channel, DataStore, Dataset, Notebook, Pipeline)
+- `quantum_ledger_database` — QLDB deprecated
+- `alexa_for_business` — Alexa for Business removed
+- `elastic_transcoder` — Elastic Transcoder removed
+- `private_5g` — Private 5G removed
+- `app_stream` — AppStream 2.0 removed
+
+> If you must represent a deprecated service, use the icon with a label noting "(Deprecated)".
 
 ## Audience Mode
 
@@ -277,6 +334,9 @@ After generating XML, verify:
 8. Every edge has both `source` and `target` attributes referencing valid cell IDs (no floating edges)
 9. All group/boundary shapes include `container=1;dropTarget=1;` in their style
 10. Children inside boundaries use `parent="<boundary-id>"` (not `parent="1"`)
+11. A step annotation panel is present explaining the architecture flow
+12. No deprecated icon names are used (see DEPRECATED Icons section)
+13. Group boundaries use appropriate fillColor for the chosen style mode
 
 ## Export
 
@@ -333,8 +393,8 @@ Each layer is an `mxCell` with `parent="0"`. Child elements reference the layer 
 ### Legend / Title Block
 Place in top-left corner, inside the background rectangle:
 ```xml
-<mxCell value="&lt;b&gt;Diagram Title&lt;/b&gt;&lt;br&gt;Author | Date | Version | Environment" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=8;" vertex="1" parent="1">
-  <mxGeometry x="40" y="40" width="420" height="50" as="geometry" />
+<mxCell value="&lt;b style='font-size:16px'&gt;Diagram Title&lt;/b&gt;&lt;br&gt;&lt;span style='color:#545B64'&gt;Author | Date | Version | Environment&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=10;" vertex="1" parent="1">
+  <mxGeometry x="40" y="30" width="500" height="60" as="geometry" />
 </mxCell>
 ```
 Include a legend/key below the title if the diagram uses custom colors, line styles, or symbols (e.g., solid = primary flow, dashed = async, red = error).
@@ -370,3 +430,5 @@ Exported files use double extension: `name.drawio.png` — signals embedded XML,
 
 - XML reference: https://raw.githubusercontent.com/jgraph/drawio-mcp/main/shared/xml-reference.md
 - Style reference: https://raw.githubusercontent.com/jgraph/drawio-mcp/main/shared/style-reference.md
+- AWS Architecture Icons (April 2026): https://aws.amazon.com/architecture/icons/
+- Style guide: See `references/style-guide.md` for complete color palette, typography, and spacing constants

@@ -5,10 +5,13 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#F5F5F5;strokeColor=#E0E0E0;arcSize=2;" vertex="1" parent="1">
-          <mxGeometry x="20" y="20" width="2000" height="700" as="geometry" />
+          <mxGeometry x="20" y="20" width="2200" height="700" as="geometry" />
         </mxCell>
-        <mxCell id="aws-cloud" value="AWS Cloud" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#232F3E;dashed=0;" vertex="1" parent="1">
-          <mxGeometry x="300" y="50" width="1600" height="640" as="geometry" />
+        <mxCell id="title" value="&lt;b style='font-size:16px'&gt;Serverless REST API&lt;/b&gt;&lt;br&gt;&lt;span style='color:#545B64'&gt;AWS Architecture | 2026-05-28 | v2.0&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="500" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="aws-cloud" value="AWS Cloud" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;container=1;dropTarget=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=#F2F3F4;verticalAlign=top;align=left;spacingLeft=30;fontColor=#232F3E;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="300" y="50" width="1350" height="640" as="geometry" />
         </mxCell>
         <mxCell id="client" value="Client" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.client" vertex="1" parent="1">
           <mxGeometry x="80" y="310" width="78" height="76" as="geometry" />
@@ -31,22 +34,25 @@
         <mxCell id="cognito" value="Cognito" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#DD344C;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cognito" vertex="1" parent="1">
           <mxGeometry x="650" y="130" width="78" height="78" as="geometry" />
         </mxCell>
-        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" edge="1" source="client" target="cf" parent="1">
+        <mxCell id="steps" value="&lt;b style='font-size:13px'&gt;Architecture Flow&lt;/b&gt;&lt;br&gt;&lt;br&gt;① Client sends HTTPS request&lt;br&gt;&lt;br&gt;② CloudFront caches and forwards to origin&lt;br&gt;&lt;br&gt;③ API Gateway authenticates via Cognito&lt;br&gt;&lt;br&gt;④ Lambda processes business logic&lt;br&gt;&lt;br&gt;⑤ DynamoDB stores/retrieves data&lt;br&gt;&lt;br&gt;⑥ S3 serves static assets" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fillColor=#F2F3F4;strokeColor=#E0E0E0;fontSize=12;spacing=10;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="1750" y="100" width="350" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="①" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=14;fontStyle=1;labelBackgroundColor=#ffffff;" edge="1" source="client" target="cf" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" edge="1" source="cf" target="apigw" parent="1">
+        <mxCell id="e2" value="②" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=14;fontStyle=1;labelBackgroundColor=#ffffff;" edge="1" source="cf" target="apigw" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" edge="1" source="apigw" target="lambda" parent="1">
+        <mxCell id="e3" value="④" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=14;fontStyle=1;labelBackgroundColor=#ffffff;" edge="1" source="apigw" target="lambda" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" edge="1" source="lambda" target="ddb" parent="1">
+        <mxCell id="e4" value="⑤" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=14;fontStyle=1;labelBackgroundColor=#ffffff;" edge="1" source="lambda" target="ddb" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;dashed=1;" edge="1" source="lambda" target="s3" parent="1">
+        <mxCell id="e5" value="⑥" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;dashed=1;fontSize=14;fontStyle=1;labelBackgroundColor=#ffffff;" edge="1" source="lambda" target="s3" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;dashed=1;" edge="1" source="apigw" target="cognito" parent="1">
+        <mxCell id="e6" value="③" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;dashed=1;fontSize=14;fontStyle=1;labelBackgroundColor=#ffffff;" edge="1" source="apigw" target="cognito" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>

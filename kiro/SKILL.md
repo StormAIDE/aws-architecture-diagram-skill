@@ -37,8 +37,8 @@ For example:
   - **Version/Date** — When the diagram was last updated
   - **Environment** — Production, Staging, Development (when applicable)
 ```xml
-<mxCell value="&lt;b&gt;Diagram Title&lt;/b&gt;&lt;br&gt;Author | Date | Version | Environment" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=8;" vertex="1" parent="1">
-  <mxGeometry x="40" y="30" width="420" height="60" as="geometry" />
+<mxCell value="&lt;b style='font-size:16px'&gt;Diagram Title&lt;/b&gt;&lt;br&gt;&lt;span style='color:#545B64'&gt;Author | Date | Version | Environment&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;spacing=10;" vertex="1" parent="1">
+  <mxGeometry x="40" y="30" width="500" height="60" as="geometry" />
 </mxCell>
 ```
 
@@ -49,6 +49,19 @@ For example:
 - Use **numbered callouts** to explain the flow sequence (①→②→③→④)
 - Add brief text annotations for non-obvious design decisions
 - Include a **legend/key** if you use custom colors, line styles, or symbols
+
+### Step Annotation Panel (REQUIRED)
+Every diagram MUST include a **numbered step annotation panel** explaining the architecture flow. This matches AWS Reference Architecture PDF standards.
+
+**Panel placement:** Right side of the diagram (x=1800+, width=350) or bottom.
+
+```xml
+<mxCell value="&lt;b style='font-size:13px'&gt;Architecture Flow&lt;/b&gt;&lt;br&gt;&lt;br&gt;① User request arrives via Route 53&lt;br&gt;&lt;br&gt;② CloudFront serves cached content&lt;br&gt;&lt;br&gt;③ API Gateway routes the request&lt;br&gt;&lt;br&gt;④ Lambda processes business logic&lt;br&gt;&lt;br&gt;⑤ DynamoDB stores/retrieves data" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fillColor=#F2F3F4;strokeColor=#E0E0E0;fontSize=12;spacing=10;arcSize=5;" vertex="1" parent="1">
+  <mxGeometry x="1800" y="100" width="350" height="280" as="geometry" />
+</mxCell>
+```
+
+Each numbered step corresponds to a flow edge. Label edges: `value="①"` with `fontSize=14;fontStyle=1;labelBackgroundColor=#ffffff;`
 
 ### Diagram Types
 Before generating, consider which diagram type best fits the request:
@@ -66,13 +79,17 @@ Before generating, consider which diagram type best fits the request:
 Create diagrams at different levels of abstraction for different audiences — executives need a high-level view, while engineers need detailed subnet-level diagrams.
 
 ### Icon Style
-- Icons are from draw.io's built-in `mxgraph.aws4` stencil library — the **official AWS Architecture Icons** (https://aws.amazon.com/architecture/icons/, updated quarterly)
+- Icons are from draw.io's built-in `mxgraph.aws4` stencil library — the **official AWS Architecture Icons** (https://aws.amazon.com/architecture/icons/, aligned with April 2026 icon package)
 - Icon size: **78x78px** for main services, **65x65px** for secondary
 - Use `sketch=0;outlineConnect=0;` on all icons
 - Use `strokeColor=#ffffff` on all AWS service icons
 - **MUST include `fillColor`** — without it, icons render as invisible/white in PNG export
 - Font size: **12px** for labels
 - Always include: `fontColor=#232F3E;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;`
+
+**Diagram Style Modes:**
+- **Reference-Architecture Style (default):** Use subtle colored fills for group boundaries (see Group Boundaries). Best for presentations and documentation.
+- **Minimal Style:** All group boxes use `fillColor=none`. Best for quick technical sketches.
 
 **fillColor by AWS service category:**
 | Category | fillColor | Services |
@@ -83,9 +100,11 @@ Create diagrams at different levels of abstraction for different audiences — e
 | Storage | `#3F8624` | S3, EFS, EBS |
 | Security | `#DD344C` | IAM, Cognito, KMS, WAF |
 | Integration | `#E7157B` | SQS, SNS, EventBridge, Step Functions |
-| Analytics | `#8C4FFF` | Kinesis, Athena, Redshift |
+| Analytics | `#8C4FFF` | Kinesis, Athena, Redshift, DataZone |
 | Management | `#E7157B` | CloudWatch, CloudTrail |
-| AI/ML | `#01A88D` | Bedrock, SageMaker |
+| AI/ML | `#01A88D` | Bedrock, SageMaker, Amazon Q |
+| Customer Experience | `#E7157B` | Connect, Pinpoint, SES |
+| Multicloud & Hybrid | `#ED7100` | Outposts, Local Zones, EKS Anywhere |
 
 ### Edge Style — CRITICAL FOR CLEAN DIAGRAMS
 
@@ -173,10 +192,17 @@ edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;s
 - `references/aws-icons-networking.md` — CloudFront, Route 53, VPC, ELB
 - `references/aws-icons-storage.md` — S3, EFS, EBS, Glacier, Backup
 - `references/aws-icons-security.md` — IAM, Cognito, KMS, WAF, Shield
-- `references/aws-icons-analytics-ml.md` — Kinesis, Athena, Bedrock, SageMaker
+- `references/aws-icons-analytics-ml.md` — Kinesis, Athena, Bedrock, SageMaker, Amazon Q
+- `references/aws-icons-iot-migration-devtools.md` — IoT Core, DMS, CodePipeline
+- `references/aws-icons-customer-experience.md` — Connect, Pinpoint, SES
+- `references/aws-icons-multicloud-hybrid.md` — Outposts, Local Zones, EKS Anywhere
 - `references/aws-icons-common.md` — Groups, general resources, edge styles, base template
+- `references/style-guide.md` — Color palette, typography, spacing, do's and don'ts
 
 **Always look up icons from reference files. Never guess icon names.**
+
+**DEPRECATED Icons (April 2026) — Avoid in new diagrams:**
+`quicksight`, `eks_cloud`, `iot_analytics`, `quantum_ledger_database`, `alexa_for_business`, `elastic_transcoder`, `private_5g`, `app_stream`
 
 **Fallback for unmapped services:** If a service is NOT found in any reference file, use this generic AWS cloud icon with the service name as label:
 ```
@@ -185,14 +211,19 @@ sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#232F3E;strokeColor=#fffff
 Never render an unknown service as a plain colored rectangle with no label.
 
 ### Group Boundaries
-- **AWS Cloud:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=none;container=1;dropTarget=1;`
-- **Account:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_account;strokeColor=#CD2264;fillColor=none;container=1;dropTarget=1;`
-- **On-premise:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_on_premise;strokeColor=#5A6C86;fillColor=none;container=1;dropTarget=1;`
-- **VPC:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc2;strokeColor=#8C4FFF;fillColor=none;container=1;dropTarget=1;`
-- **Subnet (public):** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_security_group;strokeColor=#7AA116;fillColor=none;container=1;dropTarget=1;`
-- **Subnet (private):** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_security_group;strokeColor=#147EBA;fillColor=none;container=1;dropTarget=1;`
+
+**Reference-Architecture Style (default)** — uses subtle colored fills:
+- **AWS Cloud:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=#F2F3F4;container=1;dropTarget=1;`
+- **Account:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_account;strokeColor=#CD2264;fillColor=#FDF1F6;container=1;dropTarget=1;`
+- **On-premise:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_on_premise;strokeColor=#5A6C86;fillColor=#F2F3F4;container=1;dropTarget=1;`
+- **VPC:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc2;strokeColor=#8C4FFF;fillColor=#F5F0FF;container=1;dropTarget=1;`
+- **Availability Zone:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_availability_zone;strokeColor=#007FAA;fillColor=#FFFFFF;container=1;dropTarget=1;`
+- **Subnet (public):** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_public_subnet;strokeColor=#248814;fillColor=#E9F3E6;container=1;dropTarget=1;`
+- **Subnet (private):** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_private_subnet;strokeColor=#147EBA;fillColor=#E6F0F7;container=1;dropTarget=1;`
+- **Security Group:** `shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_security_group;strokeColor=#DD344C;fillColor=none;container=1;dropTarget=1;`
 - **Logical groups:** Simple dashed boxes: `whiteSpace=wrap;html=1;fillColor=none;dashed=1;dashPattern=8 8;container=1;dropTarget=1;`
-- **NO colored backgrounds** on group boxes — always `fillColor=none`
+
+> For **Minimal Style**, replace all fillColor values with `fillColor=none`.
 
 **Container nesting (CRITICAL for grouping):**
 - ALL boundary/group shapes MUST include `container=1;dropTarget=1;` in their style
@@ -332,6 +363,9 @@ After generating XML, mentally verify:
 8. Every edge has both `source` and `target` attributes referencing valid cell IDs (no floating edges)
 9. All group/boundary shapes include `container=1;dropTarget=1;` in their style
 10. Children inside boundaries use `parent="<boundary-id>"` (not `parent="1"`)
+11. A step annotation panel is present explaining the architecture flow
+12. No deprecated icon names are used (see DEPRECATED Icons list)
+13. Group boundaries use appropriate fillColor for the chosen style mode
 
 ### Output
 - Save with descriptive filename ending in `.drawio`
@@ -352,3 +386,5 @@ After generating XML, mentally verify:
 ### Official Reference
 - Full XML/style reference: https://raw.githubusercontent.com/jgraph/drawio-mcp/main/shared/xml-reference.md
 - Style properties: https://raw.githubusercontent.com/jgraph/drawio-mcp/main/shared/style-reference.md
+- AWS Architecture Icons (April 2026): https://aws.amazon.com/architecture/icons/
+- Style guide: See `references/style-guide.md` for complete color palette, typography, and spacing constants

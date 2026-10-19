@@ -1,5 +1,7 @@
 # AWS Icons: Compute & Containers
 
+> Updated: 2026-05-28 — Aligned with AWS Architecture Icons (April 2026, Icon-package_04302026)
+
 fillColor: `#ED7100` | strokeColor: `#ffffff`
 
 ## Service-level (resourceIcon frame, 78x78)
@@ -28,8 +30,10 @@ fillColor: `#ED7100` | strokeColor: `#ffffff`
 | `containers` | Containers |
 | `ecs_anywhere` | ECS Anywhere |
 | `eks_anywhere` | EKS Anywhere |
-| `eks_cloud` | EKS Cloud |
 | `red_hat_openshift` | Red Hat OpenShift |
+
+> **Removed (April 2026):** `eks_cloud` — deprecated; `nice_engineframe` — service retired
+> **Maintenance mode (April 2026):** `app_runner` — no new customers after April 30, 2026
 
 ## Resource-level (standalone shape, 48x48 or 78x78)
 fillColor: `#ED7100` | strokeColor: `none`

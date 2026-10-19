@@ -1,5 +1,7 @@
 # AWS Icons: Database
 
+> Updated: 2026-05-28 — Aligned with AWS Architecture Icons (April 2026, Icon-package_04302026)
+
 fillColor: `#C925D1` | strokeColor: `#ffffff`
 
 ## Service-level (resourceIcon frame, 78x78)
@@ -16,7 +18,7 @@ fillColor: `#C925D1` | strokeColor: `#ffffff`
 | `timestream` | Timestream |
 | `documentdb_with_mongodb_compatibility` | DocumentDB |
 | `managed_apache_cassandra_service` | Keyspaces |
-| `quantum_ledger_database` | QLDB |
+| `quantum_ledger_database` | QLDB (**deprecated — removed April 2026**) |
 | `keyspaces` | Keyspaces |
 | `memorydb_for_redis` | MemoryDB |
 

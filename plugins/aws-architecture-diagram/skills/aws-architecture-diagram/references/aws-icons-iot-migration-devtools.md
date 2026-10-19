@@ -1,5 +1,7 @@
 # AWS Icons: IoT, Migration & Developer Tools
 
+> Updated: 2026-05-28 — Aligned with AWS Architecture Icons (April 2026, Icon-package_04302026)
+
 ## IoT
 fillColor: `#7AA116` | strokeColor: `#ffffff`
 
@@ -9,13 +11,14 @@ fillColor: `#7AA116` | strokeColor: `#ffffff`
 | `internet_of_things` | IoT |
 | `iot_core` | IoT Core |
 | `iot_greengrass` | IoT Greengrass |
-| `iot_analytics` | IoT Analytics |
 | `iot_device_defender` | IoT Device Defender |
 | `iot_device_management` | IoT Device Management |
 | `iot_events` | IoT Events |
 | `iot_sitewise` | IoT SiteWise |
 | `iot_twinmaker` | IoT TwinMaker |
 | `freertos` | FreeRTOS |
+
+> **Removed (April 2026):** `iot_analytics` — service deprecated (incl. Channel, DataStore, Dataset, Notebook, Pipeline icons); `iot_button` — discontinued; `iot_fleetwise` — maintenance mode
 
 ### Resource-level (standalone shape, 78x78)
 fillColor: `#7AA116` | strokeColor: `none`

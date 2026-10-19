@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Validate .drawio files against issues #1, #2, #3.
+"""Validate .drawio files against issues #1, #2, #3 and best-practices styling.
 
 Issue #1: VPC peering must use resource-level pattern (shape=mxgraph.aws4.vpc_peering, strokeColor=none)
 Issue #2: All edges must have source and target attributes (no floating edges)
 Issue #3: Group/boundary shapes must have container=1 and children must reference parent ID
+Issue #4: Step annotation panel must be present
+Issue #5: Deprecated icons should not be used in new diagrams
+Issue #6: Group boundaries should use appropriate fillColor for Reference-Architecture Style
 """
 
 import sys
@@ -17,7 +20,35 @@ CONTAINER_SHAPES = [
     "mxgraph.aws4.group_aws_cloud_alt",
     "mxgraph.aws4.group_account",
     "mxgraph.aws4.group_on_premise",
+    "mxgraph.aws4.group_corporate_data_center",
+    "mxgraph.aws4.group_region",
+    "mxgraph.aws4.group_availability_zone",
+    "mxgraph.aws4.group_public_subnet",
+    "mxgraph.aws4.group_private_subnet",
 ]
+
+DEPRECATED_ICONS = [
+    "quicksight",
+    "eks_cloud",
+    "iot_analytics",
+    "quantum_ledger_database",
+    "alexa_for_business",
+    "elastic_transcoder",
+    "private_5g",
+    "app_stream",
+]
+
+EXPECTED_FILL_COLORS = {
+    "mxgraph.aws4.group_aws_cloud_alt": "#F2F3F4",
+    "mxgraph.aws4.group_region": "#E6F6F7",
+    "mxgraph.aws4.group_vpc2": "#F5F0FF",
+    "mxgraph.aws4.group_public_subnet": "#E9F3E6",
+    "mxgraph.aws4.group_private_subnet": "#E6F0F7",
+    "mxgraph.aws4.group_availability_zone": "#FFFFFF",
+    "mxgraph.aws4.group_account": "#FDF1F6",
+    "mxgraph.aws4.group_on_premise": "#F2F3F4",
+    "mxgraph.aws4.group_corporate_data_center": "#F2F3F4",
+}
 
 def parse_style(style_str):
     """Parse draw.io style string into dict."""
@@ -112,16 +143,51 @@ def validate_file(filepath):
             # Good — child references a container
             pass
 
+    # Issue #4: Check for step annotation panel
+    has_step_panel = False
+    for cid, cell in cells.items():
+        value = cell.get("value", "")
+        style = parse_style(cell.get("style", ""))
+        # Step panels are text cells with circled numbers or "Architecture Flow" / "Flow"
+        if style.get("") == "text" or "text" in style:
+            if any(marker in value for marker in ["①", "②", "③", "Architecture Flow", "Flow"]):
+                has_step_panel = True
+                break
+    if not has_step_panel:
+        warnings.append("[Issue #4] No step annotation panel found — diagrams should include a numbered flow explanation")
+
+    # Issue #5: Check for deprecated icons
+    for cid, cell in cells.items():
+        style = parse_style(cell.get("style", ""))
+        res_icon = style.get("resIcon", "")
+        shape = style.get("shape", "")
+        icon_ref = res_icon or shape
+        for deprecated in DEPRECATED_ICONS:
+            if deprecated in icon_ref:
+                warnings.append(f"[Issue #5] Cell '{cid}': uses deprecated icon '{deprecated}' — consider using a replacement")
+
+    # Issue #6: Check boundary fillColors match Reference-Architecture Style
+    for cid, cell in cells.items():
+        style = parse_style(cell.get("style", ""))
+        gr_icon = style.get("grIcon", "")
+        if gr_icon in EXPECTED_FILL_COLORS:
+            fill = style.get("fillColor", "none")
+            expected = EXPECTED_FILL_COLORS[gr_icon]
+            if fill == "none":
+                warnings.append(f"[Issue #6] Group '{cid}' ({cell.get('value', '')[:30]}): fillColor=none — consider using Reference-Architecture Style fillColor={expected}")
+
     return errors, warnings
 
 
 def main():
     if len(sys.argv) < 2:
-        # Default: test all .drawio files in tests/
+        # Default: test all .drawio files in tests/ and templates/
         test_dir = Path(__file__).parent
+        repo_root = test_dir.parent
         files = list(test_dir.glob("*.drawio"))
+        files.extend(repo_root.glob("templates/*.drawio"))
         if not files:
-            print("No .drawio files found in tests/")
+            print("No .drawio files found in tests/ or templates/")
             sys.exit(1)
     else:
         files = [Path(f) for f in sys.argv[1:]]
