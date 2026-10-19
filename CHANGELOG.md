@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.1.0] - 2026-10-19
+
+### Added
+- **draw.io MCP workflow** (Claude, Kiro): `search_shapes` for every icon not in the reference files, `open_drawio_xml` preview, `list_pages`/`get_page`/`set_page` for edits of multi-page files
+- **AWS Knowledge MCP workflow** (Claude, Kiro): official service names and reference architectures via `search_documentation`, region check via `get_regional_availability`
+- **Storm Reply Standard** section (all platforms): source Confluence page "How-to create an AWS Architecture Diagram", icon usage rules, group nesting order, RPO/RTO on DR diagrams, file storage, versioning as pages
+- Validation checks: white background (Issue #7), title block present (Issue #8)
+- Example `examples/example-storm-3tier.drawio` (+ PNG, companion guide)
+
+### Changed
+- Background and edge label background changed from `#F5F5F5` to `#FFFFFF` (Storm Reply standard) in skills, references, templates and examples
+- Validation checklist extended (white background, title block with environment, legend, one flow direction)
+
+### Fixed
+- Layer XML example contained XML comments, which the well-formedness rules forbid
+
 ## [2.0.0] - 2026-05-28
 
 ### Added

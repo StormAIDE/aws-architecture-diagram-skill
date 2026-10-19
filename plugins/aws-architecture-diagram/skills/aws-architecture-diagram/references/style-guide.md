@@ -66,7 +66,7 @@ Uses transparent (`fillColor=none`) backgrounds for all group boundaries. Cleane
 | Diagram title | 16 | Bold (1) | `#232F3E` |
 | Subtitle / metadata | 12 | Normal (0) | `#545B64` |
 | Service labels | 12 | Normal (0) | `#232F3E` |
-| Edge labels | 11 | Normal (0) | `#232F3E` (with `labelBackgroundColor=#F5F5F5`) |
+| Edge labels | 11 | Normal (0) | `#232F3E` (with `labelBackgroundColor=#FFFFFF`) |
 | Group labels | 12 | Bold (1) | Category-specific (see boundary table) |
 | Step annotation title | 13 | Bold (1) | `#232F3E` |
 | Step annotation text | 12 | Normal (0) | `#232F3E` |

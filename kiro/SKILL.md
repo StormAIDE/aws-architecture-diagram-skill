@@ -1,11 +1,21 @@
 ---
 name: aws-architecture-diagram
-description: Generate AWS architecture diagrams in draw.io format. Activates when the user asks to create, generate, or build an architecture diagram, system diagram, or draw.io diagram for AWS services.
+description: Generate AWS architecture diagrams in draw.io format. Activates when the user asks to create, generate, or build an architecture diagram, system diagram, or draw.io diagram for AWS services. Applies the Storm Reply diagram standard and uses the draw.io MCP (search_shapes, open_drawio_xml) and AWS Knowledge MCP when available.
 ---
 
 ## Instructions
 
 Generate a draw.io (.drawio) XML file representing an AWS architecture diagram.
+
+### Workflow
+1. **Clarify scope** — diagram type (see Diagram Types), audience, environment (Prod/Staging/Dev), AWS region, target location of the file. Ask only what cannot be inferred
+2. **Check services with the AWS Knowledge MCP** (if available): `search_documentation` for official service names and AWS reference architectures; `get_regional_availability` to confirm every service exists in the target region (filter names must match the AWS catalog exactly, e.g. `Elastic Load Balancing (ELB)`)
+3. **Resolve icons with the draw.io MCP** (if available): services in the reference files use the verified style; for any other service call `search_shapes` (e.g. `query="aws aurora"`) and copy the returned `style` exactly. Use only results containing `mxgraph.aws4`. Never guess a stencil name
+4. **Generate and write** the `.drawio` file. To change one page of an existing multi-page file, use `list_pages` → `get_page` → `set_page`
+5. **Preview** with `open_drawio_xml` (`routing="libavoid"` if edges cross shapes; never `postLayout`). The rules in this skill win over the generic XML rules in the tool description (keep exit/entry points, 78×78 icons, spacing)
+6. **Review** the PNG export (see Two-Step Edit Approach)
+
+MCP setup (one-time): draw.io MCP `npx -y @drawio/mcp`; AWS Knowledge MCP `https://knowledge-mcp.global.api.aws`. Without the MCPs, skip steps 2, 3 and 5.
 
 ### Layout
 - **Left-to-right flow** for data/request path (top-to-bottom is acceptable for vertical architectures)
@@ -106,6 +116,17 @@ Create diagrams at different levels of abstraction for different audiences — e
 | Customer Experience | `#E7157B` | Connect, Pinpoint, SES |
 | Multicloud & Hybrid | `#ED7100` | Outposts, Local Zones, EKS Anywhere |
 
+### Storm Reply Standard
+
+Source: [How-to create an AWS Architecture Diagram](https://storm-ai.atlassian.net/wiki/spaces/StormAI/pages/136937485/How-to+create+an+AWS+Architecture+Diagram). Storm Reply is an AWS Premier Consulting Partner — diagrams are reviewed by customers and AWS. Additional rules:
+
+- **White background** (`#FFFFFF`) — no gray canvas
+- **Current AWS icon set only** (quarterly AWS releases). No legacy/2017 icons. Do not crop, rotate, recolor or combine AWS icons
+- **Nesting order** for group boundaries: AWS Cloud → Region → VPC → Availability Zone → Subnet. Detailed and Network diagrams show one AZ group per AZ; High-Level diagrams may write "Multi-AZ" in the label instead
+- **Disaster Recovery** diagrams annotate RPO/RTO next to the failover path
+- **Storage:** save the `.drawio` file in the project's shared location (project SharePoint or Git repo), not only locally
+- **Versioning:** one page per version in the same file
+
 ### Edge Style — CRITICAL FOR CLEAN DIAGRAMS
 
 **Base edge style (all edges):**
@@ -117,17 +138,18 @@ edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;s
 - Keep labels SHORT (1-2 words max). Use icon labels for detail, not edge labels.
 - On horizontal edges: position label ABOVE the line using `verticalAlign=bottom;` in the edge style
 - On vertical edges: position label to the LEFT using `align=right;` in the edge style
-- Always add `labelBackgroundColor=#F5F5F5;` so labels don't overlap lines
+- Always add `labelBackgroundColor=#FFFFFF;` so labels don't overlap lines
 - For edges WITHOUT labels: omit the `value` attribute entirely (don't use `value=""`)
 
 **Edge label positioning (prevents overlap with icons):**
 ```xml
-<mxCell value="Label" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;labelBackgroundColor=#F5F5F5;fontSize=11;" edge="1" source="a" target="b" parent="1">
+<mxCell value="Label" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontSize=11;" edge="1" source="a" target="b" parent="1">
   <mxGeometry relative="1" as="geometry" />
 </mxCell>
 ```
 
 **For edges that go to services ABOVE or BELOW the main flow:**
+- If an edge leaves an icon at the bottom, move that icon's label to the top (`verticalLabelPosition=top;verticalAlign=bottom;`) — otherwise the edge runs through the label
 - Use explicit exit/entry points to control routing:
   - Exit bottom: `exitX=0.5;exitY=1;exitDx=0;exitDy=0;`
   - Enter top: `entryX=0.5;entryY=0;entryDx=0;entryDy=0;`
@@ -204,7 +226,7 @@ edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;s
 **DEPRECATED Icons (April 2026) — Avoid in new diagrams:**
 `quicksight`, `eks_cloud`, `iot_analytics`, `quantum_ledger_database`, `alexa_for_business`, `elastic_transcoder`, `private_5g`, `app_stream`
 
-**Fallback for unmapped services:** If a service is NOT found in any reference file, use this generic AWS cloud icon with the service name as label:
+**Fallback for unmapped services:** If a service is NOT found in any reference file and `search_shapes` returns no `mxgraph.aws4` match, use this generic AWS cloud icon with the service name as label:
 ```
 sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#232F3E;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.general_AWScloud
 ```
@@ -243,7 +265,7 @@ Note: child geometry coordinates are **relative to the parent container**, not t
 ### PNG Export Background Fix
 Place a full-canvas rectangle as the FIRST element (lowest z-order):
 ```xml
-<mxCell value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=none;" vertex="1" parent="1">
+<mxCell value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
   <mxGeometry x="0" y="0" width="2400" height="1400" as="geometry" />
 </mxCell>
 ```
@@ -260,6 +282,7 @@ For complex architectures, use multiple pages (tabs) in one .drawio file:
 ```
 - Page 1: High-level overview (service-level icons only)
 - Page 2+: Detail views (resource-level icons, subnet layouts, etc.)
+- **Versioning:** keep previous versions as extra pages (e.g. `v1.0 – 2026-03`) instead of separate files
 
 ### Layers for Multi-Layer Architectures
 For complex or multi-tier diagrams, use **draw.io layers** to organize elements and reduce visual clutter. Layers allow toggling visibility of different architectural concerns (e.g., networking, security, monitoring) within a single page.
@@ -284,11 +307,9 @@ Each layer is an `mxCell` with `parent="0"`. Child elements reference the layer 
 <mxCell id="infra-layer" value="Infrastructure" parent="0" />
 <mxCell id="app-layer" value="Application" parent="0" visible="1" />
 <mxCell id="security-layer" value="Security" parent="0" visible="0" />
-<!-- Elements on the infrastructure layer -->
 <mxCell id="vpc1" value="VPC" style="..." vertex="1" parent="infra-layer">
   <mxGeometry ... />
 </mxCell>
-<!-- Elements on the application layer -->
 <mxCell id="lambda1" value="Lambda" style="..." vertex="1" parent="app-layer">
   <mxGeometry ... />
 </mxCell>
@@ -366,6 +387,11 @@ After generating XML, mentally verify:
 11. A step annotation panel is present explaining the architecture flow
 12. No deprecated icon names are used (see DEPRECATED Icons list)
 13. Group boundaries use appropriate fillColor for the chosen style mode
+14. Background rectangle is white (`fillColor=#FFFFFF`)
+15. Title block contains title, version/date and environment
+16. A legend is present if colors or line styles carry meaning
+17. One flow direction only (left→right or top→bottom)
+18. Every icon not in the reference files was resolved via `search_shapes`
 
 ### Output
 - Save with descriptive filename ending in `.drawio`

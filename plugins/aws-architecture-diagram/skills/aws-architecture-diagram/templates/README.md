@@ -26,6 +26,6 @@ Ready-to-use draw.io templates following AWS Reference Architecture best practic
 - **Step annotation panel**: Every template includes a numbered flow explanation box
 - **Numbered edges**: ①②③… labels on edges matching the step panel
 - **Title block**: Name, date, version in top-left corner
-- Background: `#F5F5F5` rectangle (prevents black on PNG export)
+- Background: `#FFFFFF` rectangle (prevents black on PNG export)
 - Left-to-right flow with 78x78 service icons
 - All groups use `container=1;dropTarget=1` with proper parent nesting
