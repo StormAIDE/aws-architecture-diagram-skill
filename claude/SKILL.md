@@ -1,6 +1,6 @@
 ---
 name: aws-architecture-diagram
-description: Always use when user asks to create, generate, or build an AWS architecture diagram, cloud infrastructure diagram, or system diagram with AWS services. Also activates for draw.io diagrams mentioning AWS services like Lambda, DynamoDB, S3, API Gateway, etc.
+description: Always use when user asks to create, generate, or build an AWS architecture diagram, cloud infrastructure diagram, or system diagram with AWS services. Also activates for draw.io diagrams mentioning AWS services like Lambda, DynamoDB, S3, API Gateway, etc. Applies the Storm Reply diagram standard and uses the draw.io MCP (search_shapes, open_drawio_xml) and AWS Knowledge MCP when available.
 ---
 
 # AWS Architecture Diagram Skill
@@ -9,10 +9,24 @@ Generate AWS architecture diagrams as native `.drawio` files using official AWS 
 
 ## How to create a diagram
 
-1. **Generate draw.io XML** in mxGraphModel format following the rules below
-2. **Write the XML** to a `.drawio` file using the Write tool
-3. **If the user requested an export format** (png, svg, pdf), export using the draw.io CLI (see Export section)
-4. **Open the result** with `open` (macOS), `xdg-open` (Linux), or print the path
+1. **Clarify scope** — diagram type (see Diagram Types), audience, environment (Prod/Staging/Dev), AWS region, target location of the file. Ask only what cannot be inferred
+2. **Check services with the AWS Knowledge MCP** (if available):
+   - `search_documentation` — official service names ("Amazon Aurora", not "Aurora DB") and AWS reference architectures for the same pattern
+   - `get_regional_availability` — confirm every service exists in the target region (e.g. `eu-central-1`) before drawing it
+   - Filter names must match the AWS catalog exactly (e.g. `Elastic Load Balancing (ELB)`, not `Elastic Load Balancing`). On an error, use the name the error message suggests
+3. **Resolve icons with the draw.io MCP** (if available):
+   - Services in the reference tables below: use the verified style
+   - Any other service: call `search_shapes` (e.g. `query="aws aurora"`) and copy the returned `style` exactly. Use only results whose style contains `mxgraph.aws4` — the search also returns Azure/GCP/Alibaba shapes
+   - Never guess a stencil name. If `search_shapes` finds nothing, use the fallback icon (see Icon Name Gotchas)
+4. **Generate draw.io XML** in mxGraphModel format following the rules below. For layers, tags or metadata, call `get_drawio_reference` with `format="xml"`
+5. **Write the XML** to a `.drawio` file using the Write tool. To change one page of an existing multi-page file, use `list_pages` → `get_page` → `set_page` instead of rewriting the whole file
+6. **Preview** with `open_drawio_xml` (pass the `<mxGraphModel>` XML as `content`). Use `routing="libavoid"` if edges cross shapes. Never set `postLayout` — it destroys the tier layout
+7. **If the user requested an export format** (png, svg, pdf), export using the draw.io CLI (see Export section), then review the PNG (see Two-Step Edit Approach)
+8. **Open the result** with `open` (macOS), `xdg-open` (Linux), or print the path
+
+**MCP setup** (one-time): `claude mcp add drawio -- npx -y @drawio/mcp` and `claude mcp add --transport http aws-knowledge https://knowledge-mcp.global.api.aws`. Without the MCPs, skip steps 2, 3 and 6 and rely on the reference files.
+
+**Rule precedence:** the `open_drawio_xml` tool description contains generic XML rules (e.g. "no exitX/entryX", grid of 140×60 boxes). For AWS diagrams, the rules in this skill win — keep explicit exit/entry points, 78×78 icons and the spacing below.
 
 ## Layout Rules
 
@@ -116,6 +130,17 @@ Before generating, consider which diagram type best fits the request:
 
 Create diagrams at different levels of abstraction for different audiences — executives need a high-level view, while engineers need detailed subnet-level diagrams.
 
+## Storm Reply Standard
+
+Source: [How-to create an AWS Architecture Diagram](https://storm-ai.atlassian.net/wiki/spaces/StormAI/pages/136937485/How-to+create+an+AWS+Architecture+Diagram). Storm Reply is an AWS Premier Consulting Partner — diagrams are reviewed by customers and AWS. Most rules are already in this skill; these are the additional ones:
+
+- **White background** (`#FFFFFF`) — no gray canvas
+- **Current AWS icon set only** (quarterly AWS releases). No legacy/2017 icons. Do not crop, rotate, recolor or combine AWS icons
+- **Nesting order** for group boundaries: AWS Cloud → Region → VPC → Availability Zone → Subnet. Detailed and Network diagrams show one AZ group per AZ; High-Level diagrams may write "Multi-AZ" in the label instead
+- **Disaster Recovery** diagrams annotate RPO/RTO next to the failover path
+- **Storage:** save the `.drawio` file in the project's shared location (project SharePoint or Git repo), not only locally
+- **Versioning:** one page per version in the same file (see Multi-page Diagrams)
+
 ## Edge Style — CRITICAL FOR CLEAN DIAGRAMS
 
 **Base edge style:**
@@ -125,11 +150,12 @@ edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;s
 
 **Edge label rules:**
 - Keep labels SHORT (1-2 words max). Detail goes in icon labels, not edge labels.
-- Always add `labelBackgroundColor=#F5F5F5;fontSize=11;` to edges with labels
+- Always add `labelBackgroundColor=#FFFFFF;fontSize=11;` to edges with labels
 - For edges WITHOUT labels: omit `value` entirely
 - When NOT to label: if the flow is obvious (Lambda → DynamoDB doesn't need "Write")
 
 **For edges to services ABOVE or BELOW main flow, use explicit exit/entry points:**
+- If an edge leaves an icon at the bottom, move that icon's label to the top (`verticalLabelPosition=top;verticalAlign=bottom;`) — otherwise the edge runs through the label
 - Exit bottom: `exitX=0.5;exitY=1;exitDx=0;exitDy=0;`
 - Enter top: `entryX=0.5;entryY=0;entryDx=0;entryDy=0;`
 - This prevents draw.io from routing lines through other icons
@@ -164,7 +190,7 @@ edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;s
 ## PNG Export Background
 First element after root cells (lowest z-order):
 ```xml
-<mxCell value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=none;" vertex="1" parent="1">
+<mxCell value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
   <mxGeometry x="0" y="0" width="2400" height="1400" as="geometry" />
 </mxCell>
 ```
@@ -315,7 +341,7 @@ draw.io stencil names do NOT always match current AWS service names. Services th
 
 **Rule:** Always verify icon names from the reference files. If a service icon renders as an empty box, the stencil name is wrong. Check the draw.io source at `src/main/webapp/js/diagramly/sidebar/Sidebar-AWS4.js` for the canonical name.
 
-**Fallback for unmapped services:** If a service is NOT found in any reference file, use this generic AWS cloud icon with the service name as label:
+**Fallback for unmapped services:** If a service is NOT found in any reference file and `search_shapes` returns no `mxgraph.aws4` match, use this generic AWS cloud icon with the service name as label:
 ```
 sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#232F3E;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.general_AWScloud
 ```
@@ -337,6 +363,11 @@ After generating XML, verify:
 11. A step annotation panel is present explaining the architecture flow
 12. No deprecated icon names are used (see DEPRECATED Icons section)
 13. Group boundaries use appropriate fillColor for the chosen style mode
+14. Background rectangle is white (`fillColor=#FFFFFF`)
+15. Title block contains title, version/date and environment
+16. A legend is present if colors or line styles carry meaning
+17. One flow direction only (left→right or top→bottom)
+18. Every icon not in the reference tables was resolved via `search_shapes`
 
 ## Export
 
@@ -353,6 +384,7 @@ For complex architectures, use multiple pages in one .drawio file:
 ```
 - Page 1: High-level overview (service-level icons only)
 - Page 2+: Detail views (resource-level icons, subnet layouts, etc.)
+- **Versioning:** keep previous versions as extra pages (e.g. `v1.0 – 2026-03`, `v1.1 – 2026-05`) instead of separate files
 
 ### Layers for Multi-Layer Architectures
 For complex or multi-tier diagrams, use **draw.io layers** to organize elements and reduce visual clutter. Layers allow toggling visibility of different architectural concerns (e.g., networking, security, monitoring) within a single page.
@@ -377,11 +409,9 @@ Each layer is an `mxCell` with `parent="0"`. Child elements reference the layer 
 <mxCell id="infra-layer" value="Infrastructure" parent="0" />
 <mxCell id="app-layer" value="Application" parent="0" visible="1" />
 <mxCell id="security-layer" value="Security" parent="0" visible="0" />
-<!-- Elements on the infrastructure layer -->
 <mxCell id="vpc1" value="VPC" style="..." vertex="1" parent="infra-layer">
   <mxGeometry ... />
 </mxCell>
-<!-- Elements on the application layer -->
 <mxCell id="lambda1" value="Lambda" style="..." vertex="1" parent="app-layer">
   <mxGeometry ... />
 </mxCell>
@@ -400,7 +430,7 @@ Place in top-left corner, inside the background rectangle:
 Include a legend/key below the title if the diagram uses custom colors, line styles, or symbols (e.g., solid = primary flow, dashed = async, red = error).
 
 ### PNG Export Background Fix
-Place a `#F5F5F5` rectangle covering the entire diagram as the bottom-most element to prevent black background on export.
+Place a `#FFFFFF` rectangle covering the entire diagram as the bottom-most element to prevent black background on export.
 
 ### Export CLI
 

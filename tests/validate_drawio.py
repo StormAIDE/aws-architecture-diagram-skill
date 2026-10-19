@@ -7,6 +7,8 @@ Issue #3: Group/boundary shapes must have container=1 and children must referenc
 Issue #4: Step annotation panel must be present
 Issue #5: Deprecated icons should not be used in new diagrams
 Issue #6: Group boundaries should use appropriate fillColor for Reference-Architecture Style
+Issue #7: Background rectangle must be white (Storm Reply standard)
+Issue #8: Title block must be present
 """
 
 import sys
@@ -175,6 +177,17 @@ def validate_file(filepath):
             expected = EXPECTED_FILL_COLORS[gr_icon]
             if fill == "none":
                 warnings.append(f"[Issue #6] Group '{cid}' ({cell.get('value', '')[:30]}): fillColor=none — consider using Reference-Architecture Style fillColor={expected}")
+
+    # Issue #7: Background rectangle (first vertex) must be white
+    vertices = [c for c in root.iter("mxCell") if c.get("vertex") == "1"]
+    if vertices:
+        bg_fill = parse_style(vertices[0].get("style", "")).get("fillColor", "")
+        if bg_fill.upper() != "#FFFFFF":
+            warnings.append(f"[Issue #7] Background '{vertices[0].get('id')}': fillColor={bg_fill or 'unset'} — must be white (#FFFFFF)")
+
+    # Issue #8: Title block (bold text cell) must be present
+    if not any("text" in parse_style(c.get("style", "")) and "<b" in c.get("value", "") for c in vertices):
+        warnings.append("[Issue #8] No title block found — add title, version/date and environment")
 
     return errors, warnings
 

@@ -107,9 +107,9 @@ Size: 24x24, placed near the edge midpoint.
 ```
 
 ## PNG Export Background Fix
-Place a light gray rectangle covering the entire diagram as background layer:
+Place a white rectangle covering the entire diagram as background layer:
 ```
-rounded=1;whiteSpace=wrap;fillColor=#F5F5F5;strokeColor=#E0E0E0;arcSize=2;
+rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#E0E0E0;arcSize=2;
 ```
 This prevents black background on areas outside groups when exporting to PNG.
 

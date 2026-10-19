@@ -36,7 +36,7 @@ Thanks for your interest in improving this skill. Here's how to help.
 - 78x78 icons (service-level) or 48x48 (resource-level)
 - `strokeWidth=2` on all edges
 - `fillColor=none` on all group containers
-- Include `#F5F5F5` background rectangle
+- Include `#FFFFFF` background rectangle
 - No XML comments
 
 ## Reporting broken icons

@@ -73,6 +73,17 @@ cp kiro/SKILL.md .kiro/skills/aws-architecture-diagram/SKILL.md
 cp -r references .kiro/skills/aws-architecture-diagram/references
 ```
 
+### Optional: MCP servers (Claude Code, Kiro)
+
+With these MCP servers the skill resolves every icon via `search_shapes`, checks service names and regional availability, and opens a live preview in draw.io:
+
+```bash
+claude mcp add drawio -- npx -y @drawio/mcp
+claude mcp add --transport http aws-knowledge https://knowledge-mcp.global.api.aws
+```
+
+Without them the skill falls back to the verified reference files.
+
 ## Usage
 
 Just ask to create an AWS architecture diagram:
@@ -106,6 +117,12 @@ Create an AWS architecture diagram as PNG for a real-time data pipeline with Kin
 
 ![3-Tier Web Application](docs/example-3tier.png)
 [Download .drawio](examples/example-3tier.drawio)
+
+### Web Platform – Storm Reply standard
+> "Create a High-Level AWS diagram: CloudFront → ALB → ECS Fargate → Aurora, eu-central-1, Prod"
+
+![Web Platform](examples/example-storm-3tier.drawio.png)
+[Download .drawio](examples/example-storm-3tier.drawio)
 
 ## Structure
 

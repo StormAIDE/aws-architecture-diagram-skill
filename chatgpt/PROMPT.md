@@ -115,6 +115,17 @@ fillColor by AWS service category:
 | Customer Experience | #E7157B | Connect, Pinpoint, SES |
 | Multicloud & Hybrid | #ED7100 | Outposts, Local Zones, EKS Anywhere |
 
+## Storm Reply Standard
+
+Source: [How-to create an AWS Architecture Diagram](https://storm-ai.atlassian.net/wiki/spaces/StormAI/pages/136937485/How-to+create+an+AWS+Architecture+Diagram). Storm Reply is an AWS Premier Consulting Partner — diagrams are reviewed by customers and AWS. Additional rules:
+
+- **White background** (`#FFFFFF`) — no gray canvas
+- **Current AWS icon set only** (quarterly AWS releases). No legacy/2017 icons. Do not crop, rotate, recolor or combine AWS icons
+- **Nesting order** for group boundaries: AWS Cloud → Region → VPC → Availability Zone → Subnet. Detailed and Network diagrams show one AZ group per AZ; High-Level diagrams may write "Multi-AZ" in the label instead
+- **Disaster Recovery** diagrams annotate RPO/RTO next to the failover path
+- **Storage:** save the `.drawio` file in the project's shared location (project SharePoint or Git repo), not only locally
+- **Versioning:** one page per version in the same file
+
 ## Edge Style — CRITICAL FOR CLEAN DIAGRAMS
 
 Base edge style (all edges):
@@ -124,11 +135,12 @@ edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;s
 
 Edge label rules:
 - Keep labels SHORT (1-2 words max)
-- Always add labelBackgroundColor=#F5F5F5;fontSize=11; to edges with labels
+- Always add labelBackgroundColor=#FFFFFF;fontSize=11; to edges with labels
 - For edges WITHOUT labels: omit value entirely
 - When NOT to label: if the flow is obvious (Lambda to DynamoDB doesn't need "Write")
 
 For edges to services ABOVE or BELOW main flow, use explicit exit/entry points:
+- If an edge leaves an icon at the bottom, move that icon's label to the top (`verticalLabelPosition=top;verticalAlign=bottom;`) — otherwise the edge runs through the label
 - Exit bottom: exitX=0.5;exitY=1;exitDx=0;exitDy=0;
 - Enter top: entryX=0.5;entryY=0;entryDx=0;entryDy=0;
 
@@ -261,7 +273,7 @@ Container nesting (CRITICAL for grouping):
 
 First element after root cells (lowest z-order):
 ```xml
-<mxCell value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=none;" vertex="1" parent="1">
+<mxCell value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
   <mxGeometry x="0" y="0" width="2400" height="1400" as="geometry" />
 </mxCell>
 ```
@@ -365,6 +377,10 @@ Before outputting XML, verify:
 13. A step annotation panel is present explaining the architecture flow
 14. No deprecated icon names are used
 15. Group boundaries use appropriate fillColor for the chosen style mode
+16. Background rectangle is white (fillColor=#FFFFFF)
+17. Title block contains title, version/date and environment
+18. A legend is present if colors or line styles carry meaning
+19. One flow direction only (left→right or top→bottom)
 
 ## XML Well-formedness (CRITICAL)
 
