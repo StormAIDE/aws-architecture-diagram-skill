@@ -1,6 +1,6 @@
 # AWS Architecture Diagram Skill
 
-[![Website](https://img.shields.io/badge/Website-vidanov.github.io-8C4FFF)](https://vidanov.github.io/aws-architecture-diagram-skill/)
+> Storm Reply fork of [vidanov/aws-architecture-diagram-skill](https://github.com/vidanov/aws-architecture-diagram-skill) (MIT). Adds the Storm Reply diagram standard ([Confluence: How-to create an AWS Architecture Diagram](https://storm-ai.atlassian.net/wiki/spaces/StormAI/pages/136937485/How-to+create+an+AWS+Architecture+Diagram)), a white background, and a draw.io MCP / AWS Knowledge MCP workflow.
 
 ![Prompt → AI Agent + Skill → .drawio diagram](docs/hero.png)
 
@@ -39,9 +39,11 @@ This works with:
 
 ### Claude Code (Plugin — recommended)
 
+In Claude Code:
+
 ```bash
-/plugin marketplace add vidanov/aws-architecture-diagram-skill
-/plugin install aws-architecture-diagram@vidanov-skills
+/plugin marketplace add StormAIDE/aws-architecture-diagram-skill
+/plugin install aws-architecture-diagram@stormai-skills
 ```
 
 Then use it:
@@ -49,7 +51,14 @@ Then use it:
 /aws-architecture-diagram:aws-architecture-diagram
 ```
 
-Or just ask naturally — the skill activates automatically when you mention AWS architecture diagrams.
+Or ask naturally. The skill activates when you mention AWS architecture diagrams.
+
+Get updates after new releases:
+```bash
+/plugin marketplace update stormai-skills
+```
+
+> **Note:** If you used the manual install before (`~/.claude/skills/aws-architecture-diagram`), remove that copy (`rm -r ~/.claude/skills/aws-architecture-diagram`). Otherwise two versions of the skill are active at the same time.
 
 ### Claude Code (Manual)
 
@@ -73,7 +82,7 @@ cp kiro/SKILL.md .kiro/skills/aws-architecture-diagram/SKILL.md
 cp -r references .kiro/skills/aws-architecture-diagram/references
 ```
 
-### Optional: MCP servers (Claude Code, Kiro)
+### Recommended: MCP servers (Claude Code, Kiro)
 
 With these MCP servers the skill resolves every icon via `search_shapes`, checks service names and regional availability, and opens a live preview in draw.io:
 
@@ -86,7 +95,22 @@ Without them the skill falls back to the verified reference files.
 
 ## Usage
 
-Just ask to create an AWS architecture diagram:
+For the full Storm Reply workflow, give the diagram type, the environment and the region in the prompt. The skill asks for missing information:
+
+```
+Create a High-Level AWS diagram for the customer portal: CloudFront → ALB → ECS Fargate → Aurora, eu-central-1, Production
+```
+
+The skill then:
+1. Checks the service names and regional availability (AWS Knowledge MCP)
+2. Resolves every icon with `search_shapes` (draw.io MCP)
+3. Writes the `.drawio` file with a title block, numbered flow, step panel and legend
+4. Opens a preview in draw.io and, if requested, exports PNG/SVG/PDF
+5. Writes a companion `.md` guide
+
+Save the `.drawio` file in the project SharePoint or Git repo. Keep new versions as extra pages in the same file.
+
+Simple prompts also work:
 
 ```
 Create an AWS architecture diagram for a serverless API with Lambda, DynamoDB, and API Gateway
@@ -227,7 +251,7 @@ These `resIcon` values do NOT render in draw.io — avoid them:
 
 | Solution | Type | Output | Editable | Zero-deps | Verified Icons |
 |----------|------|--------|----------|-----------|----------------|
-| **[aws-architecture-diagram-skill](https://github.com/vidanov/aws-architecture-diagram-skill)** | Agent Skill | `.drawio` | ✅ | ✅ | ✅ |
+| **[aws-architecture-diagram-skill](https://github.com/StormAIDE/aws-architecture-diagram-skill)** | Agent Skill | `.drawio` | ✅ | ✅ | ✅ |
 | [jgraph/drawio-mcp](https://github.com/jgraph/drawio-mcp) | MCP Server + Skill | `.drawio` | ✅ | ❌ (MCP) | ❌ |
 | [awslabs/aws-diagram-mcp-server](https://pypi.org/project/awslabs.aws-diagram-mcp-server/) | MCP Server (Python) | PNG | ❌ | ❌ (Python+GraphViz) | N/A |
 | [awslabs/diagram-as-code](https://github.com/awslabs/diagram-as-code) | CLI (Go) | PNG/SVG | ❌ | ❌ (Go binary) | N/A |

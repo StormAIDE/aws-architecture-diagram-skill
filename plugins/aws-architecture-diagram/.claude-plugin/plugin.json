@@ -1,5 +1,8 @@
 {
   "name": "aws-architecture-diagram",
   "description": "Generate AWS architecture diagrams as draw.io XML with 270+ verified icons, reference-architecture styling, step annotations, and 7 templates",
-  "version": "2.1.0"
+  "version": "2.2.0",
+  "author": {
+    "name": "Storm Reply (based on work by Alexey Vidanov)"
+  }
 }

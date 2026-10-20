@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0] - 2026-10-20
+
+### Added
+- **Visual Quality** section (all platforms), taken from upstream vidanov/aws-architecture-diagram-skill (ef7ac1e): straight edges, one bend maximum, no edge through unrelated icons or labels, consistent spacing, self-check before finishing
+
+### Changed
+- Marketplace renamed to `stormai-skills` and pointed to `StormAIDE/aws-architecture-diagram-skill`. Install: `/plugin marketplace add StormAIDE/aws-architecture-diagram-skill` + `/plugin install aws-architecture-diagram@stormai-skills`
+- README: fork notice, Storm Reply usage workflow, update command, MCP servers marked as recommended
+
+### Fixed
+- Amazon SES icon: `resIcon=ses` rendered as an empty square, now `simple_email_service` (customer-experience references)
+
 ## [2.1.0] - 2026-10-19
 
 ### Added

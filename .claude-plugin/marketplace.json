@@ -1,24 +1,31 @@
 {
-  "name": "vidanov-skills",
+  "name": "stormai-skills",
   "description": "AWS architecture diagram generation skill with verified icons, reference-architecture styling, and 7 templates",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "owner": {
-    "name": "Alexey Vidanov",
-    "email": "alexey@vidanov.com"
+    "name": "Storm Reply",
+    "url": "https://github.com/StormAIDE"
   },
   "plugins": [
     {
       "name": "aws-architecture-diagram",
       "source": "./plugins/aws-architecture-diagram",
-      "description": "Generate AWS architecture diagrams as draw.io XML with 270+ verified icons, reference-architecture styling, step annotations, and 7 templates",
-      "version": "2.1.0",
+      "description": "Generate AWS architecture diagrams as draw.io XML following the Storm Reply diagram standard, with verified icons, draw.io MCP and AWS Knowledge MCP workflow",
+      "version": "2.2.0",
       "author": {
-        "name": "Alexey Vidanov"
+        "name": "Storm Reply (based on work by Alexey Vidanov)"
       },
-      "homepage": "https://github.com/vidanov/aws-architecture-diagram-skill",
-      "repository": "https://github.com/vidanov/aws-architecture-diagram-skill",
+      "homepage": "https://github.com/StormAIDE/aws-architecture-diagram-skill",
+      "repository": "https://github.com/StormAIDE/aws-architecture-diagram-skill",
       "license": "MIT",
-      "keywords": ["aws", "architecture", "diagram", "drawio", "draw.io", "icons"],
+      "keywords": [
+        "aws",
+        "architecture",
+        "diagram",
+        "drawio",
+        "draw.io",
+        "icons"
+      ],
       "category": "devops"
     }
   ]
