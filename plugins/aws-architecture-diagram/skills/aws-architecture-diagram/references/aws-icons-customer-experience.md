@@ -9,7 +9,7 @@ fillColor: `#E7157B` | strokeColor: `#ffffff`
 |---------|-------------|
 | `connect` | Amazon Connect |
 | `pinpoint` | Amazon Pinpoint |
-| `ses` | Amazon SES |
+| `simple_email_service` | Amazon SES (Simple Email Service) |
 | `supply_chain` | AWS Supply Chain |
 
 > **Note:** The Contact Center category was removed in April 2026. Amazon Connect icons are now part of Customer Experience.
