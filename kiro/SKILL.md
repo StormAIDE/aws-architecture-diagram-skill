@@ -191,6 +191,20 @@ edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;s
 - If the icon labels already explain the relationship
 - Prefer fewer, more meaningful labels over labeling every edge
 
+### Visual Quality: straight arrows, no overlaps, professional layout
+
+A diagram with correct icons but a messy layout still reads as unprofessional. Check every diagram against these rules before finishing — they're deliberately concrete/checkable, not vague "make it look nice" advice:
+
+- **Align nodes to a consistent axis so edges are single, straight segments.** Keep the horizontal or vertical delta between adjacent nodes in a flow constant (same lane y-coordinate, same column spacing) so connecting edges render as one clean line instead of a dogleg.
+- **Align branch/secondary nodes on the exact same centerline as their parent.** If a node branches off vertically (e.g. an auxiliary service below the main flow), its horizontal center must match its parent's horizontal center exactly — compute `child.x = parent.center_x - child.width/2`, don't eyeball it. A few pixels of misalignment turns a "straight down" edge into a visibly crooked diagonal.
+- **One bend maximum per edge, ideally zero.** If a computed edge path would need more than one bend to avoid an obstacle, the layout is wrong — move the node, don't add more bends to route around the problem.
+- **No edge may cross through an unrelated icon's bounding box.** Before finalizing coordinates, check each edge's path against every icon's `(x, y, width, height)` rectangle it isn't connected to. If it would cross one, move the node or add an explicit exit/entry point to route around it.
+- **No two edges may run on top of each other or visually merge.** If two edges would travel the same corridor (e.g. two parallel flows between the same pair of lanes), offset them — different exit/entry points, or an explicit waypoint — so there's a visible gap between them.
+- **Minimize edge crossings overall.** Order nodes in the direction the data actually flows so edges rarely need to cross each other. If a crossing is unavoidable (e.g. a feedback/response path), route it with a visible offset rather than letting it overlap another edge.
+- **Keep spacing consistent, not just "enough."** Use the same minimum step size between every pair of adjacent nodes in a flow — a diagram where some gaps are 400px and others are 250px reads as sloppy even if nothing technically overlaps.
+- **Balance the composition on the canvas.** Don't leave one half of the page dense and the other empty; size the canvas to the actual content plus a consistent margin.
+- **Self-check before finishing:** after placing every coordinate, mentally trace each edge from source to target and verify (1) it doesn't cross any icon, (2) it doesn't overlap another edge, (3) it has at most one bend, (4) its endpoints are flush with the icons it connects, (5) it doesn't run through a label. Fix the layout, not just the intent, if any check fails.
+
 ### Two Icon Patterns — CRITICAL
 
 **Pattern 1: Service-level (resourceIcon frame)**
